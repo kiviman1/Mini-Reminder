@@ -1,0 +1,30 @@
+name: Publish EN/TR Wiki
+
+'on':
+  push:
+    branches: [wiki-setup]
+    paths: [.github/workflows/publish-wiki.yml]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+concurrency:
+  group: mini-reminder-wiki-import
+  cancel-in-progress: false
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Read prepared Wiki package
+        uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          persist-credentials: false
+      - name: Publish English and Turkish pages
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          gh auth setup-git --hostname github.com --force
+          python3 publish-wiki.py
