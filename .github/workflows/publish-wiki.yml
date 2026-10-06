@@ -11,6 +11,10 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: publish-wiki
+  cancel-in-progress: false
+
 jobs:
   publish:
     runs-on: ubuntu-latest
